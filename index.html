@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Font weight compare</title>
+    <link rel="stylesheet" href="main.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Cascadia Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@200..700&display=swap" rel="stylesheet">
+    <!-- JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="title">
+            <div class="h1">Font compare</div>
+            <div class="sub">Alle fonts onder elkaar · neutrale vergelijking · mobielvriendelijk</div>
+        </div>
+
+        <div class="global">
+            <label class="label" for="globalText">Testtekst</label>
+            <input id="globalText" class="input" type="text" value="Lorem Ipsum" />
+        </div>
+    </div>
+</header>
+
+<main class="wrap">
+
+    <section class="card" data-font="JetBrains Mono" data-min="100" data-max="800" data-default="400">
+        <div class="card-head">
+            <div class="font-name">JetBrains Mono</div>
+            <div class="weight-readout">wght: <span class="wval">400</span></div>
+        </div>
+
+        <div class="preview jetbrains" contenteditable="false">Lorem Ipsum</div>
+
+        <div class="controls">
+            <input class="slider" type="range" min="100" max="800" step="1" value="400" />
+            <div class="ticks">
+                <span>100</span><span>400</span><span>800</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" data-font="JetBrains Mono" data-min="100" data-max="800" data-default="600">
+        <div class="card-head">
+            <div class="font-name">JetBrains Mono (2)</div>
+            <div class="weight-readout">wght: <span class="wval">600</span></div>
+        </div>
+
+        <div class="preview jetbrains" contenteditable="false">Lorem Ipsum</div>
+
+        <div class="controls">
+            <input class="slider" type="range" min="100" max="800" step="1" value="600" />
+            <div class="ticks">
+                <span>100</span><span>400</span><span>800</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" data-font="Cascadia Code" data-min="200" data-max="700" data-default="350">
+        <div class="card-head">
+            <div class="font-name">Cascadia Code</div>
+            <div class="weight-readout">wght: <span class="wval">350</span></div>
+        </div>
+
+        <div class="preview cascadia" contenteditable="false">Lorem Ipsum</div>
+
+        <div class="controls">
+            <input class="slider" type="range" min="200" max="700" step="1" value="350" />
+            <div class="ticks">
+                <span>200</span><span>450</span><span>700</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" data-font="Cascadia Code" data-min="200" data-max="700" data-default="600">
+        <div class="card-head">
+            <div class="font-name">Cascadia Code (2)</div>
+            <div class="weight-readout">wght: <span class="wval">600</span></div>
+        </div>
+
+        <div class="preview cascadia" contenteditable="false">Lorem Ipsum</div>
+
+        <div class="controls">
+            <input class="slider" type="range" min="200" max="700" step="1" value="600" />
+            <div class="ticks">
+                <span>200</span><span>450</span><span>700</span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    const globalText = document.getElementById('globalText');
+
+    function applyWeight(previewEl, w) {
+        // Meest stabiel in browsers:
+        previewEl.style.fontWeight = String(w);
+
+        // Extra voor variable fonts (sommige browsers/renderers):
+        // Als de font geen variable wght ondersteunt, wordt dit genegeerd.
+        previewEl.style.fontVariationSettings = `"wght" ${w}`;
+    }
+
+    function syncCard(card) {
+        const preview = card.querySelector('.preview');
+        const slider = card.querySelector('.slider');
+        const wval = card.querySelector('.wval');
+
+        const setText = (t) => preview.textContent = t;
+
+        const update = () => {
+            const w = slider.value;
+            wval.textContent = w;
+            applyWeight(preview, w);
+        };
+
+        slider.addEventListener('input', update);
+        setText(globalText.value);
+        update();
+    }
+
+    document.querySelectorAll('.card').forEach(syncCard);
+
+    globalText.addEventListener('input', () => {
+        const t = globalText.value;
+        document.querySelectorAll('.preview').forEach(p => p.textContent = t);
+    });
+</script>
+
+</body>
+</html>
